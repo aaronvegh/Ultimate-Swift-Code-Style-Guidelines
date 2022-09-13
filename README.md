@@ -1,10 +1,9 @@
-# Ultimate Swift Code Style Guidelines
+# Swift Code Style Guidelines
 
-The main purpose of these guidelines is to determine specific rules following which may make an engineers's code having a unified style – which improves readability and maintainability, hence less fallibility. Most of the other existing similar guidelines don't provide exhaustive requirements on any code style aspect, or aren't sufficiently accurate, or have their own purposes which don't correlate with the general software development. This document is a try to create one that does.
-
-An engineer is free to use these guidelines, changing any rules according to their wish. However, if any rule is broken it must be broken the same way across the whole project. I.e. any broken rule shall be replaced by another, instead of carelessly neglecting it.
-
-One handy way to base own guidelines on these ones is to fork the repository and change any rule. However, if an engineer feels that something is completely wrong and should be fixed, they are free to fork and create a pull-request for initiating a discussion.
+## Fundamentals
+* _Clarity at the point of use_ is your most important goal. Entities such as methods and properties are declared only once but used repeatedly. Design APIs to make those uses clear and concise. When evaluating a design, reading a declaration is seldom sufficient; always examine a use case to make sure it looks clear in context.
+* _Clarity is more important than brevity._ Although Swift code can be compact, it is a non-goal to enable the smallest possible code with the fewest characters. Brevity in Swift code, where it occurs, is a side-effect of the strong type system and features that naturally reduce boilerplate.
+* _Write a documentation comment for every declaration._ Insights gained by writing documentation can have a profound impact on your design, so don’t put it off. If you are having trouble describing your API’s functionality in simple terms, you may have designed the wrong API.
 
 <h2 id="table-of-contents">Table of Сontents</h2>
 
@@ -14,7 +13,7 @@ One handy way to base own guidelines on these ones is to fork the repository and
 
 #### 1.1.1. [Files and Directories](#files-and-directories)
 
-#### 1.1.2. [CVS](#cvs)
+#### 1.1.2. [Version Control](#cvs)
 
 ### 1.2. [File Structure](#file-structure)
 
@@ -33,6 +32,8 @@ One handy way to base own guidelines on these ones is to fork the repository and
 #### 1.4.1. [Types](#types)
 
 #### 1.4.2. [Methods](#methods)
+
+#### 1.4.3 [Terminology](#terminology)
 
 ### 1.5. [API](#api)
 
@@ -88,9 +89,7 @@ If the primary content of the file is a type extension, the file shall be named 
 
 [Return to Table of Contents](#table-of-contents)
 
-<h4 id="cvs">CVS</h4>
-
-_Not going deeply into the topic, since each CVS has its own guidelines._
+<h4 id="cvs">Version Control</h4>
 
 Every commit is atomic and presents a meaningful and working state of the project. Checking out at any commit results in a working software. Considering these two rules, an engineer shall think thoroughly about implementation phases, or refactoring steps.
 
@@ -102,7 +101,7 @@ Any temporary code, debug console output, debug commits shall never be committed
 
 <h3 id="file-structure">File Structure</h3>
 
-File is divided into sections by `// MARK:` comments. Root declarations (e.g. two classes on the same level) are separated by `// MARK: -`. Declarations within the same group of a type are gathered together in sections, like `// MARK: - Methods`. Multiple declarations within a group – like `// MARK: Private methods`. This type of comments (as well as any other) is kept close to grammatically correct language.
+File is divided into sections by `// MARK:` comments. Root declarations (e.g. two classes on the same level) are separated by `// MARK: -`. Declarations within the same group of a type are gathered together in sections, like `// MARK: - Methods`. Multiple declarations within a group – like `// MARK: Private methods`. This type of comment (as well as any other) is kept close to grammatically correct language.
 
 **Don't:**
 ```swift
@@ -113,7 +112,7 @@ File is divided into sections by `// MARK:` comments. Root declarations (e.g. tw
 // MARK: -Methods
 ```
 
-Indentation shall be made with whitespaces, because tab symbols can be represented differently in different environments. One level of indentation is four whitespaces.
+For the purpose of accessibility, prioritize tabs over spaces in your projects. This allows those who are visually impaired to more easily read the code in order to contribute to our codebase.
 
 Braces should be weighted: If there's a whitespace after the opening brace, there always must be one before the closing brace. Type declarations shall always have such whitespaces coming with braces, methods shall not.
 
@@ -328,13 +327,13 @@ final class GatewayStandartService: GatewayService, DataServerDelegate { // FIXM
 }
 ```
 
-File length doesn't have a specific line number limitation, since basically, code shall respect contemporary software development principles (mainly, S.O.L.I.D., and also complemented by their small siblings – D.R.Y., K.I.S.S., and Y.A.G.N.I.). Following the principles won't let an engineer create an unacceptably long file. However, if an engineer isn't experienced and doesn't have an experienced reviewer, the number of 200 lines (including all formatting and comments) could be used for guidance. Though, this doesn't mean that well organized files of the length of 201 or even 300 lines are necessarily evil – an engineer shall be guided by their common sense. 
+File length doesn't have a specific line number limitation, since basically, code shall respect contemporary software development principles (mainly, S.O.L.I.D., and also complemented by their small siblings – D.R.Y., K.I.S.S., and Y.A.G.N.I.). Following the principles won't let an engineer create an unacceptably long file. However, if an engineer isn't experienced and doesn't have an experienced reviewer, the number of 200 lines (including all formatting and comments) could be used for guidance. Though, this doesn't mean that well-organized files of the length of 201 or even 300 lines are necessarily evil – an engineer shall be guided by their common sense. 
 
 [Return to Table of Contents](#table-of-contents)
 
 <h4 id="imports">Imports</h4>
 
-All imports go in the very beginning of the file and sorted lexicographically. Empty lines between imports are not used.
+All imports go in the very beginning of the file and are sorted lexicographically. Empty lines between imports are not used.
 
 More specific imports (like `Darwin`) are preferable over less specific (like `Foundation`) to keep namespace cleaner and probably, the resulting build thinner.
 
@@ -556,9 +555,14 @@ Comments, both single- and multi-line, are placed on the line above the commente
 
 <h3 id="naming">Naming</h3>
 
-All declarations should be self-explanatory and consist of American English words and form correct human-readable phrases when read aloud.
+## Promote Clear Usage
+All declarations should be self-explanatory and consist of American English words and form correct human-readable phrases when read aloud. Include all the words needed to avoid ambiguity for a person reading code where the name is used.
 
 Everything but types is `lowerCamelCase`. The types are `UpperCamelCase` (a.k.a. `PascalCase`).
+
+Name variables, parameters, and associated types according to their roles, rather than their type constraints.
+
+Omit needless words. Every word in a name should convey salient information at the use site.
 
 Abbreviations don't have different cases within and are cased up or down according to the rule above (e.g. `let asciiTable: [String : String]`, `class SMTPServer`). (A common mistake to use `Id` instead of `ID` or `id` is also not acceptable.)
 
@@ -662,17 +666,52 @@ private func onNextButtonTapped(_ sender: UIButton) { // ...
 
 The latter naming convention is confusing because makes you think of delegation. However, actions may be thought of as of a kind of delegation, and the naming style might make sense for some code bases.
 
+Uses of Boolean methods and properties should read as assertions about the receiver when the use is nonmutating, e.g. `x.isEmpty`, `line1.intersects(line2)`.
+
+[Return to Table of Contents](#table-of-contents)
+
+<h4 id="terminology">Terminology</h4>
+
+_**noun** - a word or phrase that has a precise, specialized meaning within a particular field or profession._
+
+* _Avoid obscure terms_ if a more common word conveys meaning just as well. Don’t say “epidermis” if “skin” will serve your purpose. Terms of art are an essential communication tool, but should only be used to capture crucial meaning that would otherwise be lost.
+* _Stick to the established meaning_ if you do use a term of art.
+* _Avoid abbreviations._ Abbreviations, especially non-standard ones, are effectively terms-of-art, because understanding depends on correctly translating them into their non-abbreviated forms. The intended meaning for any abbreviation you use should be easily found by a web search.
+* _Embrace precedent._ Don’t optimize terms for the total beginner at the expense of conformance to existing culture.
+
 [Return to Table of Contents](#table-of-contents)
 
 <h3 id="api">API</h3>
 
-Basically, types representing pure values which could be fairly interchanged by values themselves should be `struct`, otherwise (e.g., objects containing state or having a lifecycle) – `class`. Other considerations for choosing over `struct`s and `class`es – expected semantics, memory management, etc., are not the topic of this document.
+Types representing pure values which could be fairly interchanged by values themselves should be `struct`, otherwise (e.g., objects containing state or having a lifecycle) – `class`. Other considerations for choosing over `struct`s and `class`es – expected semantics, memory management, etc., are not the topic of this document.
 
-Properties are expected to have a constant time complexity. If one doesn't it's changed to a method.
+Document the complexity of any computed property that is not O(1). People often assume that property access involves no significant computation, because they have stored properties as a mental model. Be sure to alert them when that assumption may be violated.
 
 Optional booleans and collections are avoided, because they bring degraded states: for example, what's the difference between an empty array and a `nil` array within the same context?
 
 Free functions are usually a design flaw. An engineer shall double-check, whether free functions really shouldn't correspond to some type.
+
+Methods can share a base name when they share the same basic meaning or when they operate in distinct domains.
+
+### Parameters
+Choose parameter names to serve documentation. Even though parameter names do not appear at a function or method’s point of use, they play an important explanatory role.
+
+Take advantage of defaulted parameters when it simplifies common uses. Any parameter with a single commonly-used value is a candidate for a default.
+
+Prefer to locate parameters with defaults toward the end of the parameter list. Parameters without defaults are usually more essential to the semantics of a method, and provide a stable initial pattern of use where methods are invoked.
+
+If your API will run in production, prefer `#fileID` over alternatives. `#fileID` saves space and protects developers’ privacy. Use `#filePath` in APIs that are never run by end users (such as test helpers and scripts) if the full path will simplify development workflows or be used for file I/O. Use `#file` to preserve source compatibility with Swift 5.2 or earlier.
+
+### Argument Labels
+Omit all labels when arguments can’t be usefully distinguished, e.g. `min(number1, number2)`, `zip(sequence1, sequence2)`.
+
+In initializers that perform value preserving type conversions, omit the first argument label, e.g. `Int64(someUInt32)`
+
+When the first argument forms part of a prepositional phrase, give it an argument label. The argument label should normally begin at the preposition, e.g. `x.removeBoxes(havingLength: 12)`.
+
+Otherwise, if the first argument forms part of a grammatical phrase, omit its label, appending any preceding words to the base name, e.g. `x.addSubview(y)`
+
+Label all other arguments.
 
 Methods that do some actions don't return objects of these actions (e.g., a presenting view controller method shall not return the presented view controller).
 
